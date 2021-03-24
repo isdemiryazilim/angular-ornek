@@ -1,0 +1,10 @@
+<label>
+    {{label}} : 
+</label>
+<mat-form-field appearance="outline" color="primary" class="form-field">
+    <mat-label>{{label}}</mat-label>
+    <input matInput type="text" autocomplete="off" [formControl]="control" />
+    <mat-error *ngIf="control.errors?.required">
+        {{label}} girmelisiniz.
+    </mat-error>
+</mat-form-field>

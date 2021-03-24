@@ -1,0 +1,13 @@
+<label>
+    {{label}} :
+</label>
+<mat-form-field appearance="outline" color="primary" class="form-field">
+    <mat-label>{{label}}</mat-label>
+    <input (focus)="datePicker.open()" [matDatepicker]="datePicker" autocomplete="off" [formControl]="control" [readonly]="true" matInput>
+    <mat-datepicker-toggle [for]="datePicker" matSuffix>
+    </mat-datepicker-toggle>
+    <mat-datepicker #datePicker></mat-datepicker>
+    <mat-error *ngIf="control.errors?.required">
+        {{label}} seçmelisiniz.
+    </mat-error>
+</mat-form-field>

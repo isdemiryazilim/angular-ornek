@@ -1,0 +1,11 @@
+<label>
+    {{label}} :
+</label>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 100%;">
+    <input #fileInput  type="file" (change)="fileChange.emit($event.target.files[0])" style="display: none;"/>
+    <span>{{file?.name || "Dosya Yükleyiniz"}}</span>
+    <button type="button" mat-raised-button class='ml-2 button-continue'
+        (click)="fileInput.value = null; fileInput.click()"> Dosya
+        Ekle
+    </button>
+</div>

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,19 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'angular-ornek';
+  sub = null;
+  title = '';
+  menu = [
+    { url: '/', title: 'Anasayfa' },
+    { url: '/personel', title: 'Personel Yönetimi' },
+  ];
+
+  constructor(private router: Router) {
+    
+    router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.title = this.menu.find(({ url }) => url === event.url ).title;
+      }
+    });
+  }
 }

@@ -1,0 +1,96 @@
+<div class="col">
+    <mat-accordion>
+        <mat-expansion-panel expanded="0">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Personel Bilgileri {{ seciliPersonel ? "( "+seciliPersonel.empno+" numaralı personel )" : "" }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div>
+                <form [formGroup]="kayitForm" (ngSubmit)="kaydet()">
+                    <div class="row">
+                        <div class="col">
+                            <app-input-text label="Ad Soyad" [control]="fK.ename"></app-input-text>
+                            <app-input-select label="Departman" display="dname" [options]="deptList" [control]="fK.dept">
+                            </app-input-select>
+                        </div>
+                        <div class="col">
+                            <app-input-text label="Maaş" [control]="fK.sal"></app-input-text>
+                            <app-input-text label="Komisyon" [control]="fK.comm"></app-input-text>
+                        </div>
+                        <div class="col">
+                            <app-input-date label="İşe Başlama Tarihi" [control]="fK.hiredate"></app-input-date>
+                            <app-input-file label="Dosya" [file]="dosya" (fileChange)="dosya = $event"></app-input-file>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:16px">
+                        <button mat-raised-button color="primary" style="max-width: 200px;">Kaydet</button>
+                        <button type="button" (click)="reset()" mat-raised-button style="max-width: 200px;">Temizle</button>
+                    </div>
+                </form>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion>
+        <mat-expansion-panel expanded="0">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Sorgu Kriterleri
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div>
+                <form [formGroup]="sorguForm" (ngSubmit)="sorgula()">
+                    <div class="row" style="max-width: 33%">
+                        <app-input-select label="Departman" display="dname" [options]="deptList" [control]="fS.dept"></app-input-select>
+                    </div>
+                    <div class="row" style="margin-top:16px">
+                        <button mat-raised-button color="accent" style="max-width: 200px;">Sorgula</button>
+                    </div>
+                </form>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <div [hidden]="!(personelListesi && personelListesi.data.length > 0)">
+        <mat-card style="width: auto; margin-bottom: 32px;">
+        <h4>Personel Listesi</h4>
+        <table mat-table [dataSource]="personelListesi" class="datatable mat-elevation-z8">
+            <ng-container matColumnDef="empno">
+                <th mat-header-cell *matHeaderCellDef>Personel Numarası</th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                    {{ element.empno }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="ename">
+                <th mat-header-cell *matHeaderCellDef>Ad/Soyad</th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                    {{ element.ename }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="dept">
+                <th mat-header-cell *matHeaderCellDef>Departman</th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                    {{ element.dept.dname }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="hiredate">
+                <th mat-header-cell *matHeaderCellDef>İşe Başlama Tarihi</th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                    {{ element.hiredate | date : 'dd/MM/yyyy' }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="delete">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                    <button type="button" mat-mini-fab color="warn" aria-label="Sil" (click)="sil(element)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="kolonListesi"></tr>
+            <tr mat-row *matRowDef="let row; columns: kolonListesi" (click)="sec(row)"></tr>
+        </table>
+    </mat-card>
+    </div>
+</div>

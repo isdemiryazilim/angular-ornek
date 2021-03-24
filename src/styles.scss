@@ -1,1 +1,70 @@
 /* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.grid-form {
+  display: grid;
+  gap: 1em;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.form-field {
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.row > *:not(:last-child) {
+  margin-right: 8px;
+}
+
+.col > *:not(:last-child) {
+  margin-bottom: 12px;
+}
+
+.col > *,
+.row > * {
+  width: 100%;
+}
+
+.datatable {
+  width: 100%;
+  thead {
+    background: #303F9F !important;
+    * {
+      color: white !important;
+      font-size: 1.05em !important;
+    }
+  }
+
+  .mat-mini-fab {
+    width: 32px;
+    height: 32px;
+    .mat-icon {
+      font-size: 16px;
+    }
+  }
+}
+
+@media (max-width: 950px) {
+  .row {
+    flex-direction: column;
+  }
+  .row > *:not(:last-child) {
+    margin-bottom: 8px;
+  }
+}
