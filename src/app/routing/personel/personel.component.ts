@@ -70,11 +70,6 @@ export class PersonelComponent implements OnInit {
 
   departmanListesiGetir() {
     this.deptList = dummyDeptList;
-   /* this.personelService.departmanListesiGetir().pipe(
-      tap((res: any) => {
-        this.deptList = res;
-      })
-    ).subscribe();*/
   }
 
   reset() {

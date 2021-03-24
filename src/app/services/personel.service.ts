@@ -11,8 +11,8 @@ export class PersonelService {
 
   constructor(private http: HttpClient) { }
 
-  departmanListesiGetir(): Observable<ResponseDTO<EmpDTO[]>> {
-    return this.http.post<ResponseDTO<EmpDTO[]>>(ENDPOINTS.GENEL.DEPT_LIST, {});
+  departmanListesiGetir() {
+
   }
 
   personelListesiGetir(deptNo) {
