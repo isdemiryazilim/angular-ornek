@@ -5,6 +5,12 @@ export class ResponseDTO<T> {
     data: T;
 }
 
+
+export class ComboDTO {
+    id: number;
+    value: string;
+}
+
 export class DeptDTO {
     deptno: number;
     dname: string;

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { PersonelService } from '../../services/personel.service';
-import { tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { DeptDTO, EmpDTO, dummyDeptList, dummyEmpList } from '../../models/personel';
 import { DosyaService } from '../../services/dosya.service';
 
@@ -37,7 +37,20 @@ export class PersonelComponent implements OnInit {
 
   kaydet() {
     if (this.kayitForm.valid) {
-      console.log('S', this.kayitForm.value);
+      const personel = this.kayitForm.value as EmpDTO;
+      this.personelService.personelKaydet(personel).pipe(tap((res) => {
+        if (res.success) {
+          this.snackBar.open('Kaydetme Başarılı : ' + res.data.ename, 'Kapat', {
+            horizontalPosition: 'right',
+            verticalPosition: 'top'
+          });
+        } else {
+          this.snackBar.open('Kaydetme Başarısız', 'Kapat', {
+            horizontalPosition: 'right',
+            verticalPosition: 'top'
+          });
+        }
+      })).subscribe();
     } else {
       this.snackBar.open('Gerekli Alanları Doldurunuz', 'Kapat', {
         horizontalPosition: 'right',
@@ -46,14 +59,25 @@ export class PersonelComponent implements OnInit {
     }
   }
 
-  sil(personel: EmpDTO){
-    console.log('sil', personel);
+  sil(personel: EmpDTO) {
+    this.personelService.personelSil(personel).pipe(tap((res) => {
+      if (res.success) {
+        this.snackBar.open('Silme Başarılı', 'Kapat', {
+          horizontalPosition: 'right',
+          verticalPosition: 'top'
+        });
+        this.sorgula();
+      }
+    })).subscribe();
   }
 
   sorgula() {
     if (this.sorguForm.valid) {
       console.log('S', this.sorguForm.value);
-      this.personelListesi = new MatTableDataSource<EmpDTO>(dummyEmpList);
+      const personel = this.sorguForm.value as EmpDTO;
+      this.personelService.personelListesiGetir(personel.dept.deptno).pipe(tap((res) => {
+        this.personelListesi = new MatTableDataSource<EmpDTO>(res.data);
+      })).subscribe();
     } else {
       this.snackBar.open('Gerekli Alanları Doldurunuz', 'Kapat', {
         horizontalPosition: 'right',
@@ -65,11 +89,22 @@ export class PersonelComponent implements OnInit {
   sec(personel: EmpDTO) {
     this.reset();
     this.seciliPersonel = personel;
-    this.kayitForm.patchValue(personel);
+    this.seciliPersonel.hiredate = new Date(personel.hiredate);
+    this.seciliPersonel.dept = this.deptList.find( dept => dept.deptno === personel.dept.deptno );
+    this.kayitForm.patchValue(this.seciliPersonel);
   }
 
   departmanListesiGetir() {
-    this.deptList = dummyDeptList;
+    this.personelService.departmanListesiGetir().pipe(tap((res) => {
+      if (res.success) {
+        this.deptList = res.data.map((combo) => ({ deptno: combo.id, dname: combo.value } as DeptDTO));
+      } else {
+        this.snackBar.open('Başarız', 'Kapat', {
+          horizontalPosition: 'right',
+          verticalPosition: 'top'
+        });
+      }
+    })).subscribe();
   }
 
   reset() {
@@ -78,8 +113,17 @@ export class PersonelComponent implements OnInit {
     this.dosya = null;
   }
 
+  dosyaKaydet() {
+    this.dosyaService.dosyaKaydet(this.dosya).subscribe();
+  }
+
+  dosyaIndir() {
+    this.dosyaService.dosyaIndir('denemeh2.txt');
+  }
+
   createKayitForm() {
     this.kayitForm = this.formBuilder.group({
+      empno: [null],
       dept: ['', Validators.required],
       ename: ['', Validators.required],
       hiredate: ['', Validators.required],
